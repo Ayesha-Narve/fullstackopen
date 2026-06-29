@@ -1,6 +1,5 @@
 ### New Note in Single Page App 
 
-```mermaid
 sequenceDiagram
     participant browser
     participant server
@@ -16,7 +15,6 @@ sequenceDiagram
 
     Note right of browser: JavaScript adds the new note to the list.
     Note right of browser: The browser updates the page without reloading.
-```
 
 ### New Note in Single Page App Diagram
 

@@ -1,6 +1,5 @@
 ### Single Page APP
 
-```mermaid
 sequenceDiagram
     participant browser
     participant server
@@ -28,7 +27,7 @@ sequenceDiagram
     deactivate server
 
     Note right of browser: The browser executes the callback function that renders the notes.
-```
+
 ### Single Page App Diagram
 
 ![Single Page App Diagram](images/singlePage.png)
