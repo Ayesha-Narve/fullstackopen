@@ -29,11 +29,10 @@ const Content = (props) => {
 }
 
 const Total = (props) => {
-  const total =
-    props.parts[0].exercises +
-    props.parts[1].exercises +
-    props.parts[2].exercises +
-    props.parts[3].exercises
+  const total = props.parts.reduce(
+    (sum, part) => sum + part.exercises,
+    0
+  )
 
   return (
     <p>
@@ -76,7 +75,12 @@ const App = () => {
         name: 'Redux',
         exercises: 11,
         id: 4
-      }
+      },
+      {
+  name: 'React Router',
+  exercises: 6,
+  id: 5
+}
     ]
   }
   return (
