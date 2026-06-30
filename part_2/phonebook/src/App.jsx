@@ -1,3 +1,6 @@
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 import { useState } from 'react'
 
 const App = () => {
@@ -12,7 +15,17 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
+  const handleNameChange = (event) => {
+  setNewName(event.target.value)
+}
 
+const handleNumberChange = (event) => {
+  setNewNumber(event.target.value)
+}
+
+const handleFilterChange = (event) => {
+  setFilter(event.target.value)
+}
   const addPerson = (event) => {
     event.preventDefault()
 
@@ -39,48 +52,30 @@ const App = () => {
     person.name.toLowerCase().includes(filter.toLowerCase())
   )
 
-  return (
-    <div>
-      <h3>Filter shown with</h3>
+ return (
+  <div>
+    <h2>Phonebook</h2>
 
-      <div>
-        <input
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-        />
-      </div>
-      <h2>Phonebook</h2>
+    <Filter
+      filter={filter}
+      handleFilterChange={handleFilterChange}
+    />
 
-      <form onSubmit={addPerson}>
-        <div>
-          name:
-          <input
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-          />
-        </div>
+    <h3>Add a new</h3>
 
-        <div>
-          number:
-          <input
-            value={newNumber}
-            onChange={(event) => setNewNumber(event.target.value)}
-          />
-        </div>
+    <PersonForm
+      addPerson={addPerson}
+      newName={newName}
+      handleNameChange={handleNameChange}
+      newNumber={newNumber}
+      handleNumberChange={handleNumberChange}
+    />
 
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+    <h2>Numbers</h2>
 
-      <h2>Numbers</h2>
-      {personsToShow.map(person => (
-        <p key={person.name}>
-          {person.name} {person.number}
-        </p>
-      ))}
-    </div>
-  )
+    <Persons persons={personsToShow} />
+  </div>
+)
 }
 
 export default App
