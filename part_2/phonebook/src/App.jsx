@@ -106,20 +106,32 @@ const App = () => {
     }
 
     personService
-      .create(personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+  .create(personObject)
+  .then(response => {
 
-        setMessageType('success')
-        setMessage(`Added ${response.data.name}`)
+    setPersons(persons.concat(response.data))
 
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+    setMessageType('success')
+    setMessage(`Added ${response.data.name}`)
 
-        setNewName('')
-        setNewNumber('')
-      })
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+
+    setNewName('')
+    setNewNumber('')
+
+  })
+  .catch(error => {
+
+    setMessageType('error')
+    setMessage(error.response.data.error)
+
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+
+  })
   }
 
   const personsToShow = persons.filter(person =>
