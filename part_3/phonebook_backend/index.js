@@ -72,6 +72,26 @@ app.post('/api/persons', (request, response) => {
     .catch(error => next(error))
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+
+  const { name, number } = request.body
+
+  const person = {
+    name,
+    number
+  }
+
+  Person.findByIdAndUpdate(
+    request.params.id,
+    person,
+    { new: true }
+  )
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
   // Check for duplicate names
   const nameExists = persons.some(
     person => person.name === body.name
