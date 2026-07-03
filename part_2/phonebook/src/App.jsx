@@ -14,24 +14,24 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-  axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
-    })
-}, [])
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
 
   const handleNameChange = (event) => {
-  setNewName(event.target.value)
-}
+    setNewName(event.target.value)
+  }
 
-const handleNumberChange = (event) => {
-  setNewNumber(event.target.value)
-}
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
 
-const handleFilterChange = (event) => {
-  setFilter(event.target.value)
-}
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
   const addPerson = (event) => {
     event.preventDefault()
 
@@ -49,39 +49,43 @@ const handleFilterChange = (event) => {
       number: newNumber
     }
 
-    setPersons(persons.concat(personObject))
+    axios
+  .post('http://localhost:3001/persons', personObject)
+  .then(response => {
+    setPersons(persons.concat(response.data))
     setNewName('')
     setNewNumber('')
+  })
   }
 
   const personsToShow = persons.filter(person =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   )
 
- return (
-  <div>
-    <h2>Phonebook</h2>
+  return (
+    <div>
+      <h2>Phonebook</h2>
 
-    <Filter
-      filter={filter}
-      handleFilterChange={handleFilterChange}
-    />
+      <Filter
+        filter={filter}
+        handleFilterChange={handleFilterChange}
+      />
 
-    <h3>Add a new</h3>
+      <h3>Add a new</h3>
 
-    <PersonForm
-      addPerson={addPerson}
-      newName={newName}
-      handleNameChange={handleNameChange}
-      newNumber={newNumber}
-      handleNumberChange={handleNumberChange}
-    />
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
 
-    <h2>Numbers</h2>
+      <h2>Numbers</h2>
 
-    <Persons persons={personsToShow} />
-  </div>
-)
+      <Persons persons={personsToShow} />
+    </div>
+  )
 }
 
 export default App
