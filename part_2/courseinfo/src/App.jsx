@@ -18,7 +18,7 @@ const App = () => {
         exercises: 7,
         id: 2
       },
-      {
+      {   
         name: 'State of a component',
         exercises: 14,
         id: 3
