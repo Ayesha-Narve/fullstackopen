@@ -87,16 +87,7 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const person = {
-    id: String(Math.floor(Math.random() * 1000000)),
-    name: body.name,
-    number: body.number
-  }
-
-  persons = persons.concat(person)
-
-  response.json(person)
-})
+  
 
 app.get('/info', (request, response) => {
   const date = new Date()
