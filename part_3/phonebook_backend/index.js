@@ -122,16 +122,24 @@ app.get('/info', (request, response) => {
 })
 
 const errorHandler = (error, request, response, next) => {
+
   console.error(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({
+    return response.status(400).json({
       error: 'malformatted id'
+    })
+  }
+
+  if (error.name === 'ValidationError') {
+    return response.status(400).json({
+      error: error.message
     })
   }
 
   next(error)
 }
+
 
 app.use(errorHandler)
 const PORT = 3001
