@@ -69,11 +69,7 @@ app.post('/api/persons', (request, response) => {
     .then(savedPerson => {
       response.json(savedPerson)
     })
-    .catch(error => {
-      response.status(500).json({
-        error: 'failed to save person'
-      })
-    })
+    .catch(error => next(error))
 })
 
   // Check for duplicate names
@@ -98,7 +94,19 @@ app.get('/info', (request, response) => {
   `)
 })
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
 
+  if (error.name === 'CastError') {
+    return response.status(400).send({
+      error: 'malformatted id'
+    })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 const PORT = 3001
 
 app.listen(PORT, () => {
