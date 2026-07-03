@@ -1,20 +1,20 @@
-const express = require('express')
-const path = require('path')
-const morgan = require('morgan')
-const Person = require('./models/person')
+const express = require('express');
+const path = require('path');
+const morgan = require('morgan');
+const Person = require('./models/person');
 
-const app = express()
+const app = express();
 
 morgan.token('body', (request) => {
-  return JSON.stringify(request.body)
+  return JSON.stringify(request.body);
 })
 
-app.use(express.json())
-app.use(express.static('dist'))
+app.use(express.json());
+app.use(express.static('dist'));
 
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
-)
+);
 
 
 
@@ -23,7 +23,7 @@ app.get('/api/persons', (request, response) => {
     .then(persons => {
       response.json(persons)
     })
-})
+});
 
 app.get('/api/persons/:id', (request, response, next) => {
 
