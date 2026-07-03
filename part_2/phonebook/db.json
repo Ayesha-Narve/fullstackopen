@@ -24,6 +24,11 @@
       "name": "ayesha",
       "number": "4541231123",
       "id": "slWqIZJfmkE"
+    },
+    {
+      "name": "abc",
+      "number": "785621",
+      "id": "dCu0QWaGpzI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
