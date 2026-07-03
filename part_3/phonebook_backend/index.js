@@ -37,12 +37,12 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-
-  persons = persons.filter(person => person.id !== id)
-
-  response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -97,6 +97,7 @@ app.get('/info', (request, response) => {
     <p>${date}</p>
   `)
 })
+
 
 const PORT = 3001
 
