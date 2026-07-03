@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const morgan = require('morgan')
 
 const app = express()
@@ -8,6 +9,7 @@ morgan.token('body', (request) => {
 })
 
 app.use(express.json())
+app.use(express.static('dist'))
 
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
