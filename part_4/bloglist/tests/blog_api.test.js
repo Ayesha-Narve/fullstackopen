@@ -35,6 +35,14 @@ test('blogs are returned as json', async () => {
   assert.strictEqual(response.body.length, 2)
 })
 
+test('blog identifier is named id', async () => {
+
+  const response = await api.get('/api/blogs')
+
+  assert(response.body[0].id)
+
+})
+
 after(async () => {
   const mongoose = require('mongoose')
   await mongoose.connection.close()
