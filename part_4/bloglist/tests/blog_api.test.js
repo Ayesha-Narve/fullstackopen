@@ -133,6 +133,25 @@ test('a blog can be deleted', async () => {
   )
 })
 
+test('a blog likes can be updated', async () => {
+  const blogsAtStart = await api.get('/api/blogs')
+
+  const blogToUpdate = blogsAtStart.body[0]
+
+  const updatedBlog = {
+    ...blogToUpdate,
+    likes: 100
+  }
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+
+  assert.strictEqual(response.body.likes, 100)
+})
+
+
 after(async () => {
   const mongoose = require('mongoose')
   await mongoose.connection.close()
