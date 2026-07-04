@@ -1,6 +1,8 @@
 const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const supertest = require('supertest')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 const app = require('../app')
 const Blog = require('../models/blog')
@@ -9,21 +11,24 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
 
-  await Blog.insertMany([
-    {
-      title: 'First blog',
-      author: 'Ayesha',
-      url: 'www.test.com',
-      likes: 5
-    },
-    {
-      title: 'Second blog',
-      author: 'John',
-      url: 'www.node.com',
-      likes: 8
-    }
-  ])
+  const passwordHash = await bcrypt.hash('secret', 10)
+
+  const user = new User({
+    username: 'root',
+    name: 'Superuser',
+    passwordHash
+  })
+
+  await user.save()
+
+  for (const blog of helper.initialBlogs) {
+    await new Blog({
+      ...blog,
+      user: user._id
+    }).save()
+  }
 })
 
 test('blogs are returned as json', async () => {
@@ -44,6 +49,15 @@ test('blog identifier is named id', async () => {
 })
 
 test('a valid blog can be added', async () => {
+    const loginResponse = await api
+  .post('/api/login')
+  .send({
+    username: 'root',
+    password: 'secret'
+  })
+
+const token = loginResponse.body.token
+
   const newBlog = {
     title: 'Learning Full Stack',
     author: 'Ayesha',
@@ -53,6 +67,7 @@ test('a valid blog can be added', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -151,6 +166,19 @@ test('a blog likes can be updated', async () => {
   assert.strictEqual(response.body.likes, 100)
 })
 
+test('blog cannot be added without token', async () => {
+  const newBlog = {
+    title: 'Unauthorized Blog',
+    author: 'Ayesha',
+    url: 'https://example.com',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+})
 
 after(async () => {
   const mongoose = require('mongoose')
