@@ -1,5 +1,6 @@
-const { test } = require('node:test')
+const { test, describe } = require('node:test')
 const assert = require('node:assert')
+
 const listHelper = require('../utils/list_helper')
 
 test('dummy returns one', () => {
@@ -8,4 +9,63 @@ test('dummy returns one', () => {
   const result = listHelper.dummy(blogs)
 
   assert.strictEqual(result, 1)
+})
+
+describe('total likes', () => {
+
+  const emptyList = []
+
+  const oneBlog = [
+    {
+      title: 'React',
+      author: 'Facebook',
+      likes: 7
+    }
+  ]
+
+  const manyBlogs = [
+    {
+      title: 'React',
+      author: 'Facebook',
+      likes: 7
+    },
+    {
+      title: 'Node',
+      author: 'Ryan',
+      likes: 5
+    },
+    {
+      title: 'JavaScript',
+      author: 'Brendan',
+      likes: 10
+    }
+  ]
+
+  test('of empty list is zero', () => {
+
+    assert.strictEqual(
+      listHelper.totalLikes(emptyList),
+      0
+    )
+
+  })
+
+  test('when list has one blog equals its likes', () => {
+
+    assert.strictEqual(
+      listHelper.totalLikes(oneBlog),
+      7
+    )
+
+  })
+
+  test('of bigger list is calculated correctly', () => {
+
+    assert.strictEqual(
+      listHelper.totalLikes(manyBlogs),
+      22
+    )
+
+  })
+
 })
