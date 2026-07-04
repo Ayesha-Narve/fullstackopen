@@ -14,6 +14,11 @@ const create = async newBlog => {
     }
   }
 
+  const update = async (id, updatedBlog) => {
+  const response = await axios.put(`${baseUrl}/${id}`, updatedBlog)
+  return response.data
+}
+
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
@@ -25,5 +30,6 @@ const setToken = newToken => {
 export default {
   getAll,
   create,
+  update,
   setToken
 }
