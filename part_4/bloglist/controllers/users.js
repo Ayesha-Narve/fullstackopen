@@ -3,26 +3,48 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
-  response.json(users)
+    const users = await User.find({})
+    response.json(users)
 })
 
 usersRouter.post('/', async (request, response) => {
-  const { username, name, password } = request.body
+    const { username, name, password } = request.body
 
-  const saltRounds = 10
+    if (!username || !password) {
+        return response.status(400).json({
+            error: 'username and password are required'
+        })
+    }
 
-  const passwordHash = await bcrypt.hash(password, saltRounds)
+    if (username.length < 3) {
+        return response.status(400).json({
+            error: 'username must be at least 3 characters long'
+        })
+    }
 
-  const user = new User({
-    username,
-    name,
-    passwordHash
-  })
+    if (password.length < 3) {
+        return response.status(400).json({
+            error: 'password must be at least 3 characters long'
+        })
+    }
 
-  const savedUser = await user.save()
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(password, saltRounds)
 
-  response.status(201).json(savedUser)
+    const user = new User({
+        username,
+        name,
+        passwordHash
+    })
+
+    try {
+        const savedUser = await user.save()
+        response.status(201).json(savedUser)
+    } catch (error) {
+        response.status(400).json({
+            error: error.message
+        })
+    }
 })
 
 module.exports = usersRouter
