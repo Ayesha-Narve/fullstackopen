@@ -66,6 +66,34 @@ if (!token) {
 })
 
 app.delete('/api/blogs/:id', async (request, response) => {
+  const token = request.token
+
+  if (!token) {
+    return response.status(401).json({
+      error: 'token missing'
+    })
+  }
+
+  const decodedToken = jwt.verify(token, 'SECRET')
+
+  if (!decodedToken.id) {
+    return response.status(401).json({
+      error: 'token invalid'
+    })
+  }
+
+  const blog = await Blog.findById(request.params.id)
+
+  if (!blog) {
+    return response.status(404).end()
+  }
+
+  if (blog.user.toString() !== decodedToken.id.toString()) {
+    return response.status(401).json({
+      error: 'only the creator can delete a blog'
+    })
+  }
+
   await Blog.findByIdAndDelete(request.params.id)
 
   response.status(204).end()
