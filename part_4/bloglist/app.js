@@ -1,9 +1,11 @@
 const express = require('express')
 const Blog = require('./models/blog')
+const usersRouter = require('./controllers/users')
 
 const app = express()
 
 app.use(express.json())
+app.use('/api/users', usersRouter)
 
 app.get('/api/blogs', async (request, response) => {
   const blogs = await Blog.find({})
