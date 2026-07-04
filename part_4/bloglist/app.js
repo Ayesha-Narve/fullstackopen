@@ -23,13 +23,31 @@ app.get('/api/blogs', async (request, response) => {
 app.post('/api/blogs', async (request, response) => {
   const body = request.body
 
+  const authorization = request.get('authorization')
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return response.status(401).json({
+      error: 'token missing'
+    })
+  }
+
+  const token = authorization.replace('Bearer ', '')
+
+  const decodedToken = jwt.verify(token, 'SECRET')
+
+  if (!decodedToken.id) {
+    return response.status(401).json({
+      error: 'token invalid'
+    })
+  }
+
+  const user = await User.findById(decodedToken.id)
+
   if (!body.title || !body.url) {
     return response.status(400).json({
       error: 'title and url are required'
     })
   }
-
-  const user = await User.findOne({})
 
   const blog = new Blog({
     title: body.title,
