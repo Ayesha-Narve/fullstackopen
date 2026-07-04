@@ -43,6 +43,29 @@ test('blog identifier is named id', async () => {
 
 })
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Learning Full Stack',
+    author: 'Ayesha',
+    url: 'https://fullstackopen.com',
+    likes: 10
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, 3)
+
+  const titles = response.body.map(blog => blog.title)
+
+  assert(titles.includes('Learning Full Stack'))
+})
+
 after(async () => {
   const mongoose = require('mongoose')
   await mongoose.connection.close()
