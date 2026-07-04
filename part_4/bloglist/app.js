@@ -22,26 +22,10 @@ app.get('/api/blogs', async (request, response) => {
   response.json(blogs)
 })
 
-app.post('/api/blogs', async (request, response) => {
+app.post('/api/blogs', middleware.userExtractor, async (request, response) => {
   const body = request.body
 
-  const token = request.token
-
-if (!token) {
-  return response.status(401).json({
-    error: 'token missing'
-  })
-}
-
-  const decodedToken = jwt.verify(token, 'SECRET')
-
-  if (!decodedToken.id) {
-    return response.status(401).json({
-      error: 'token invalid'
-    })
-  }
-
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
 
   if (!body.title || !body.url) {
     return response.status(400).json({
@@ -65,22 +49,8 @@ if (!token) {
   response.status(201).json(savedBlog)
 })
 
-app.delete('/api/blogs/:id', async (request, response) => {
-  const token = request.token
-
-  if (!token) {
-    return response.status(401).json({
-      error: 'token missing'
-    })
-  }
-
-  const decodedToken = jwt.verify(token, 'SECRET')
-
-  if (!decodedToken.id) {
-    return response.status(401).json({
-      error: 'token invalid'
-    })
-  }
+app.delete('/api/blogs/:id', middleware.userExtractor, async (request, response) => {
+  const user = request.user
 
   const blog = await Blog.findById(request.params.id)
 
@@ -88,7 +58,7 @@ app.delete('/api/blogs/:id', async (request, response) => {
     return response.status(404).end()
   }
 
-  if (blog.user.toString() !== decodedToken.id.toString()) {
+  if (blog.user.toString() !== user.id.toString()) {
     return response.status(401).json({
       error: 'only the creator can delete a blog'
     })
