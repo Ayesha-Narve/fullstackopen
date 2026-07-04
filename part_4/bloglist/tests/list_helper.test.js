@@ -41,6 +41,32 @@ describe('total likes', () => {
     }
   ]
 
+  describe('favorite blog', () => {
+  const blogs = [
+    {
+      title: 'React',
+      author: 'Facebook',
+      likes: 7
+    },
+    {
+      title: 'Node',
+      author: 'Ryan',
+      likes: 15
+    },
+    {
+      title: 'JavaScript',
+      author: 'Brendan',
+      likes: 10
+    }
+  ]
+
+  test('returns the blog with most likes', () => {
+    const result = listHelper.favoriteBlog(blogs)
+
+    assert.deepStrictEqual(result, blogs[1])
+  })
+})
+
   test('of empty list is zero', () => {
 
     assert.strictEqual(
