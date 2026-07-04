@@ -82,6 +82,41 @@ test('if likes property is missing, it defaults to 0', async () => {
   assert.strictEqual(response.body.likes, 0)
 })
 
+test('blog without title is not added', async () => {
+  const newBlog = {
+    author: 'Ayesha',
+    url: 'https://example.com',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, 2)
+})
+
+test('blog without url is not added', async () => {
+  const newBlog = {
+    title: 'Missing URL',
+    author: 'Ayesha',
+    likes: 5
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, 2)
+})
+
+
 after(async () => {
   const mongoose = require('mongoose')
   await mongoose.connection.close()
