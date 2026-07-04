@@ -31,4 +31,10 @@ app.post('/api/blogs', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+app.delete('/api/blogs/:id', async (request, response) => {
+  await Blog.findByIdAndDelete(request.params.id)
+
+  response.status(204).end()
+})
+
 module.exports = app
