@@ -4,11 +4,13 @@ const usersRouter = require('./controllers/users')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const middleware = require('./utils/middleware')
 
 
 const app = express()
 
 app.use(express.json())
+app.use(middleware.tokenExtractor)
 app.use('/api/users', usersRouter)
 
 app.get('/api/blogs', async (request, response) => {
@@ -23,15 +25,13 @@ app.get('/api/blogs', async (request, response) => {
 app.post('/api/blogs', async (request, response) => {
   const body = request.body
 
-  const authorization = request.get('authorization')
+  const token = request.token
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    return response.status(401).json({
-      error: 'token missing'
-    })
-  }
-
-  const token = authorization.replace('Bearer ', '')
+if (!token) {
+  return response.status(401).json({
+    error: 'token missing'
+  })
+}
 
   const decodedToken = jwt.verify(token, 'SECRET')
 
