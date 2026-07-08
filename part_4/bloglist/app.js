@@ -73,19 +73,26 @@ app.put('/api/blogs/:id', async (request, response) => {
   const body = request.body
 
   const blog = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes
-  }
+  title: body.title,
+  author: body.author,
+  url: body.url,
+  likes: body.likes,
+  user: body.user
+}
 
   const updatedBlog = await Blog.findByIdAndUpdate(
-    request.params.id,
-    blog,
-    { new: true }
-  )
+  request.params.id,
+  blog,
+  {
+    new: true,
+    runValidators: true
+  }
+).populate('user', {
+  username: 1,
+  name: 1
+})
 
-  response.json(updatedBlog)
+response.json(updatedBlog)
 })
 
 app.post('/api/login', async (request, response) => {
@@ -110,9 +117,9 @@ app.post('/api/login', async (request, response) => {
   }
 
   const token = jwt.sign(
-    userForToken,
-    'SECRET'
-  )
+  userForToken,
+  process.env.SECRET
+)
 
   response.status(200).send({
     token,
