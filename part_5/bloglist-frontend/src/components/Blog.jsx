@@ -1,11 +1,11 @@
 import { useState } from 'react'
+
 const Blog = ({
   blog,
   updateLikes,
   deleteBlog,
   user
 }) => {
-
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -16,48 +16,42 @@ const Blog = ({
     marginBottom: 5
   }
 
-  const hideWhenVisible = {
-    display: visible ? 'none' : ''
-  }
-
-  const showWhenVisible = {
-    display: visible ? '' : 'none'
-  }
-
   return (
-    <div style={blogStyle}>
-      <div style={hideWhenVisible}>
-        {blog.title} {blog.author}
-        <button onClick={() => setVisible(true)}>
-          view
-        </button>
-      </div>
-
-      <div style={showWhenVisible}>
-        <div>
+    <div className="blog" style={blogStyle}>
+      {!visible ? (
+        <div className="blog-summary">
           {blog.title} {blog.author}
-          <button onClick={() => setVisible(false)}>
-            hide
+          <button onClick={() => setVisible(true)}>
+            view
           </button>
         </div>
+      ) : (
+        <div className="blog-details">
+          <div>
+            {blog.title} {blog.author}
+            <button onClick={() => setVisible(false)}>
+              hide
+            </button>
+          </div>
 
-        <div>{blog.url}</div>
+          <div>{blog.url}</div>
 
-        <div>
-          likes {blog.likes}
-          <button onClick={() => updateLikes(blog)}>
-            like
-          </button>
+          <div>
+            likes {blog.likes}
+            <button onClick={() => updateLikes(blog)}>
+              like
+            </button>
+          </div>
 
+          <div>{blog.user?.name}</div>
+
+          {blog.user?.username === user?.username && (
+            <button onClick={() => deleteBlog(blog)}>
+              remove
+            </button>
+          )}
         </div>
-
-        <div>{blog.user?.name}</div>
-        {blog.user?.username === user.username && (
-          <button onClick={() => deleteBlog(blog)}>
-            remove
-          </button>
-        )}
-      </div>
+      )}
     </div>
   )
 }
