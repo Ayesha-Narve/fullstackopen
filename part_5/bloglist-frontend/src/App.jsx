@@ -66,36 +66,36 @@ const App = () => {
   }
 
   const addBlog = async (blogObject) => {
-  const returnedBlog = await blogService.create(blogObject)
+    const returnedBlog = await blogService.create(blogObject)
 
-  blogFormRef.current.toggleVisibility()
+    blogFormRef.current.toggleVisibility()
 
-  setBlogs(blogs.concat(returnedBlog))
+    setBlogs(blogs.concat(returnedBlog))
 
-  setNotification(
-    `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-  )
+    setNotification(
+      `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+    )
 
-  setTimeout(() => {
-    setNotification(null)
-  }, 5000)
-}
-
-const updateLikes = async (blog) => {
-  const updatedBlog = {
-    ...blog,
-    likes: blog.likes + 1,
-    user: blog.user.id || blog.user
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
-  const returnedBlog = await blogService.update(blog.id, updatedBlog)
+  const updateLikes = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id || blog.user
+    }
 
-  setBlogs(
-    blogs.map(b =>
-      b.id === blog.id ? returnedBlog : b
+    const returnedBlog = await blogService.update(blog.id, updatedBlog)
+
+    setBlogs(
+      blogs.map(b =>
+        b.id === blog.id ? returnedBlog : b
+      )
     )
-  )
-}
+  }
 
   if (user === null) {
     return (
@@ -148,13 +148,16 @@ const updateLikes = async (blog) => {
         <BlogForm createBlog={addBlog} />
 
       </Togglable>
-      {blogs.map(blog => (
-        <Blog
-  key={blog.id}
-  blog={blog}
-  updateLikes={updateLikes}
-/>
-      ))}
+      {blogs
+        .slice()
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            updateLikes={updateLikes}
+          />
+        ))}
     </div>
   )
 }
