@@ -50,7 +50,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch (exception) {
+    } catch  {
       setNotification('Wrong username or password')
 
       setTimeout(() => {
